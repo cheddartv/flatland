@@ -1,0 +1,7 @@
+.item {
+  display: block
+}
+
+.item.hasFocus {
+  border: red 1px solid;
+}
