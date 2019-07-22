@@ -9,7 +9,7 @@ export default class Boundary extends React.Component {
       globalX: 0,
       globalY: 0,
       focusedSection: props.children[0].props.id,
-      focusTheives: {}
+      focusThieves: {}
     }
 
     this.handleKeydown = this.handleKeydown.bind(this)
@@ -28,7 +28,7 @@ export default class Boundary extends React.Component {
   }
 
   registerFocusThief(thief, stealable) {
-    this.setState({ focusTheives: { ...this.state.focusTheives, [thief]: [ ...this.state.focusTheives, stealable] } })
+    this.setState({ focusThieves: { ...this.state.focusThieves, [thief]: [ ...(this.state.focusThieves[thief] || []), stealable] } })
   }
 
   handleKeydown(key) {
@@ -58,7 +58,7 @@ export default class Boundary extends React.Component {
   }
 
   handleBoundary(ref, dir) {
-    const nextFocus = this.state.focusTheives[ref.props.id].find(ft => ft.onExitFrom === dir)
+    const nextFocus = this.state.focusThieves[ref.props.id].find(ft => ft.onExitFrom === dir)
     if (nextFocus) {
       this.setState({ focusedSection: nextFocus.id })
     }
