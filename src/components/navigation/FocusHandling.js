@@ -8,6 +8,7 @@ export default function withFocusHandling(WrappedComponent) {
       super(props)
 
       this.handleBoundary = this.handleBoundary.bind(this)
+      this.handleKeypress = this.handleKeypress.bind(this)
     }
 
     componentDidMount() {
@@ -17,14 +18,18 @@ export default function withFocusHandling(WrappedComponent) {
     }
 
     defaultHandleBoundary(dir) {
-      return dir => this.props.handleBoundary(this.wrappedRef, dir)
+      return () => this.props.handleBoundary(this.wrappedRef, dir)
     }
 
-    wrappedRef = {
-      handleLeft: this.defaultHandleBoundary(LEFT),
-      handleUp: this.defaultHandleBoundary(UP),
-      handleRight: this.defaultHandleBoundary(RIGHT),
-      handleDown: this.defaultHandleBoundary(DOWN),
+    handleKeypress(dir) {
+      const dirToHandler = {
+        [LEFT]: this.wrappedRef.handleLeft || this.defaultHandleBoundary(LEFT),
+        [UP]: this.wrappedRef.handleUp || this.defaultHandleBoundary(UP),
+        [RIGHT]: this.wrappedRef.handleRight || this.defaultHandleBoundary(RIGHT),
+        [DOWN]: this.wrappedRef.handleDown || this.defaultHandleBoundary(DOWN),
+      }
+
+      dirToHandler[dir].bind(this.wrappedRef)()
     }
 
     componentDidUpdate(prevProps) {
@@ -35,18 +40,19 @@ export default function withFocusHandling(WrappedComponent) {
           switch(pressWas(prevProps, this.props)) {
             case LEFT:
               console.log("LEFT")
+              this.handleKeypress(LEFT)
               break
             case UP:
               console.log("UP")
-              this.wrappedRef.handleUp()
+              this.handleKeypress(UP)
               break
             case RIGHT:
               console.log("RIGHT")
-              this.wrappedRef.handleRight()
+              this.handleKeypress(RIGHT)
               break
             case DOWN:
               console.log("DOWN")
-              this.wrappedRef.handleDown()
+              this.handleKeypress((DOWN))
               break
             default:
               console.log('Cannot handle keypress!')
