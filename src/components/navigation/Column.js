@@ -1,6 +1,7 @@
+import Classnames from 'classnames'
 import React from 'react'
+import { DOWN, UP } from '../../util/keypress'
 import withFocusHandling from './FocusHandling'
-import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 
 class Column extends React.Component {
   constructor(props) {
@@ -42,16 +43,16 @@ class Column extends React.Component {
     children = React.Children.toArray(children)
 
     return (
-      <React.Fragment>
+      <div className={Classnames({ ...this.props.classNames, column: true })}>
         {children.map((item, index) => {
           if (typeof(item) !== 'object') {
             throw(`Child ${item} of Boundary is invalid!`)
           }
           let key = `column-item-${index}`
-          let itemProps = {...item.props, key}
+          let itemProps = {...item.props, key }
           return this.hasFocus(index) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
         })}
-      </React.Fragment>
+      </div>
     )
   }
 }

@@ -1,10 +1,10 @@
 import 'preact/devtools'
 import '../stylesheets/app.css'
 import React from "react"
+import { LEFT, RIGHT } from '../util/keypress'
 import Item from './navigation/Item'
 import Column from './navigation/Column'
 import Boundary from './navigation/Boundary'
-import { TOP, BOTTOM, RIGHT } from '../util/keypress'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -16,13 +16,13 @@ export default class App extends React.Component {
       <div className='container'>
         <div className='app'>
           <Boundary>
-            <Column id={'first'} pushFocusTo={[ { id: 'second', onExitFrom: BOTTOM } ]}>
+            <Column id={'first'} pushFocusTo={[ { id: 'second', onExitFrom: RIGHT } ]}>
               <Item>Hello!</Item>
               <Item>Select</Item>
               <Item>Any</Item>
               <Item>Item</Item>
             </Column>
-            <Column id={'second'} pushFocusTo={[ { id: 'first', onExitFrom: RIGHT } ]}>
+            <Column id={'second'} classNames={{second: true}} pushFocusTo={[ { id: 'first', onExitFrom: LEFT } ]}>
               <Item>Or</Item>
               <Item>Navigate</Item>
               <Item>Here!</Item>
