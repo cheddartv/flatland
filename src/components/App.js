@@ -1,6 +1,7 @@
 import 'preact/devtools'
 import '../stylesheets/app.css'
 import React from "react"
+import Row from './navigation/Row'
 import { LEFT, RIGHT } from '../util/keypress'
 import Item from './navigation/Item'
 import Column from './navigation/Column'
@@ -22,11 +23,11 @@ export default class App extends React.Component {
               <Item>Any</Item>
               <Item>Item</Item>
             </Column>
-            <Column id={'second'} classNames={{second: true}} pushFocusTo={[ { id: 'first', onExitFrom: LEFT } ]}>
+            <Row id={'second'} pushFocusTo={[ { id: 'first', onExitFrom: LEFT } ]}>
               <Item>Or</Item>
               <Item>Navigate</Item>
               <Item>Here!</Item>
-            </Column>
+            </Row>
           </Boundary>
         </div>
       </div>

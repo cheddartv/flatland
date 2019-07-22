@@ -1,11 +1,5 @@
-.column {
-  display: inline-block
-}
-
-.item {
-  display: block
-}
-
-.item.hasFocus {
-  border: red 1px solid;
-}
+.row .item { display: inline-block }
+.row { display: inline-block }
+.column { display: inline-block }
+.item { display: block }
+.item.hasFocus { border: red 1px solid }

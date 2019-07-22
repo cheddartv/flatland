@@ -13,8 +13,7 @@ class Column extends React.Component {
     }
   }
 
-  get maxFocusY() {
-    return this.props.children.length - 1
+  get maxFocusY() { return this.props.children.length - 1
   }
 
   hasFocus(index) {
@@ -46,7 +45,7 @@ class Column extends React.Component {
       <div className={Classnames({ ...this.props.classNames, column: true })}>
         {children.map((item, index) => {
           if (typeof(item) !== 'object') {
-            throw(`Child ${item} of Boundary is invalid!`)
+            throw(`Child ${item} of Column is invalid!`)
           }
           let key = `column-item-${index}`
           let itemProps = {...item.props, key }
