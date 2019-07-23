@@ -13,8 +13,7 @@ class Column extends React.Component {
     }
   }
 
-  get maxFocusY() { return this.props.children.length - 1
-  }
+  get maxFocusY() { return this.props.children.length - 1 }
 
   hasFocus(index) {
     return this.props.hasFocus && this.state.focusY === index
@@ -37,7 +36,7 @@ class Column extends React.Component {
   }
 
   render() {
-    let { children } = this.props
+    let { children, updateCurrentItem } = this.props
 
     children = React.Children.toArray(children)
 
@@ -48,7 +47,7 @@ class Column extends React.Component {
             throw(`Child ${item} of Column is invalid!`)
           }
           let key = `column-item-${index}`
-          let itemProps = {...item.props, key }
+          let itemProps = {...item.props, key, updateCurrentItem }
           return this.hasFocus(index) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
         })}
       </div>

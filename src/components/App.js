@@ -25,7 +25,7 @@ export default class App extends React.Component {
               <Item>Hello!</Item>
               <Item>Select</Item>
               <Item>Any</Item>
-              <Item>Item</Item>
+              <Item onSelect={() => console.log('success!')}>Item</Item>
             </Column>
             <Row id={'second'} pushFocusTo={[
               { id: 'first', onExitFrom: LEFT },

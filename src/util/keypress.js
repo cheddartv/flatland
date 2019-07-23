@@ -7,8 +7,8 @@ const BOTTOM = 40
 const SELECT = 13
 
 const pressWas = (prevProps, props) => {
-  const { globalX: prevGlobalX, globalY: prevGlobalY } = prevProps
-  const { globalX, globalY } = props
+  const { globalX: prevGlobalX, globalY: prevGlobalY, selects: prevSelects } = prevProps
+  const { globalX, globalY, selects } = props
 
   const deltaX = globalX - prevGlobalX
   const deltaY = globalY - prevGlobalY
@@ -23,6 +23,9 @@ const pressWas = (prevProps, props) => {
     case '0,1':
       return DOWN
     case '0,0':
+      if (selects > prevSelects) {
+        return SELECT
+      }
       return 0
     default:
       console.log(`Could not determine press for ${[deltaX, deltaY]}`)
