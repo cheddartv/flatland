@@ -1,4 +1,5 @@
 import React from 'react'
+import { BoundaryContext } from './BoundaryContext'
 import { DOWN, LEFT, RIGHT, SELECT, UP, pressWas } from '../../util/keypress'
 
 export default function withFocusHandling(WrappedComponent) {
@@ -8,7 +9,8 @@ export default function withFocusHandling(WrappedComponent) {
       super(props)
 
       this.state = {
-        currentItem: { handleSelect: (() => {}) }
+        currentItem: { handleSelect: (() => {}) },
+        prevContext: {globalX: 0, globalY: 0, selects: 0},
       }
       this.handleBoundary = this.handleBoundary.bind(this)
       this.updateCurrentItem = this.updateCurrentItem.bind(this)
@@ -41,16 +43,17 @@ export default function withFocusHandling(WrappedComponent) {
       dirToHandler[dir].bind(dir == SELECT ? this : this.wrappedRef)()
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate() {
+      const { prevContext } = this.state
       if (
-        prevProps.globalX !== this.props.globalX ||
-        prevProps.globalY !== this.props.globalY ||
-        prevProps.selects !== this.props.selects
+        prevContext.globalX !== this.context.globalX ||
+        prevContext.globalY !== this.context.globalY ||
+        prevContext.selects !== this.context.selects
       ) {
         const { hasFocus } = this.props
 
         if (hasFocus) {
-          switch(pressWas(prevProps, this.props)) {
+          switch(pressWas(prevContext, this.context)) {
             case LEFT:
               console.log("LEFT")
               this.handleKeypress(LEFT)
@@ -74,6 +77,7 @@ export default function withFocusHandling(WrappedComponent) {
             default:
               console.log('Cannot handle keypress!')
           }
+          this.setState({ prevContext: this.context })
         }
       }
     }
@@ -87,7 +91,8 @@ export default function withFocusHandling(WrappedComponent) {
    }
 
     render() {
-      const { globalX, globalY, handleBoundary: __, pushFocusTo, registerFocusThief, ...restProps } = this.props
+      const { globalX, globalY } = this.context
+      const { handleBoundary: __, pushFocusTo, registerFocusThief, ...restProps } = this.props
       const { handleBoundary, updateCurrentItem } = this
       const injectedProps = { handleBoundary, updateCurrentItem }
 
@@ -96,5 +101,9 @@ export default function withFocusHandling(WrappedComponent) {
   }
 
   Focusable.displayName = `Focusable(${WrappedComponent.displayName || WrappedComponent.name})`
+  Focusable.defaultProps = {
+    pushFocusTo: []
+  }
+  Focusable.contextType = BoundaryContext
   return Focusable
 }

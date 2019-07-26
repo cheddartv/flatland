@@ -1,15 +1,19 @@
 import React from 'react'
+import { BoundaryContext } from './BoundaryContext'
 import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 
 export default class Boundary extends React.Component {
   constructor(props) {
     super(props)
+    const childrenToArray = React.Children.toArray(props.children)
 
     this.state = {
-      globalX: 0,
-      globalY: 0,
-      selects: 0,
-      focusedSection: props.children[0].props.id,
+      coordinates: {
+        globalX: 0,
+        globalY: 0,
+        selects: 0,
+      },
+      focusedSection: childrenToArray[0].props.id,
       focusThieves: {}
     }
 
@@ -24,18 +28,18 @@ export default class Boundary extends React.Component {
     window.addEventListener("keydown", this.handleKeydown)
   }
 
-  incrementGlobals(vectorX, vectorY) {
-    const { globalX, globalY } = this.state
-    this.setState({ globalX: globalX + vectorX, globalY: globalY + vectorY })
-  }
-
-  handleSelect(vectorX, vectorY) {
-    const { selects } = this.state
-    this.setState({ selects: selects + 1 })
+  handleSelect() {
+    const { selects } = this.state.coordinates
+    this.setState({ coordinates: { ...this.state.coordinates, selects: selects + 1 } })
   }
 
   registerFocusThief(thief, stealable) {
     this.setState({ focusThieves: { ...this.state.focusThieves, [thief]: [ ...(this.state.focusThieves[thief] || []), stealable] } })
+  }
+
+  incrementGlobals(x, y) {
+    const { globalX, globalY } = this.state.coordinates
+    this.setState({ coordinates: { ...this.state.coordinates, globalX: globalX + x, globalY: globalY + y } })
   }
 
   handleKeydown(key) {
@@ -65,7 +69,8 @@ export default class Boundary extends React.Component {
   }
 
   handleBoundary(ref, dir) {
-    const nextFocus = this.state.focusThieves[ref.props.id].find(ft => ft.onExitFrom === dir)
+    const focusThieves = this.state.focusThieves[ref.props.id] ||  []
+    const nextFocus = focusThieves.find(ft => ft.onExitFrom === dir)
     if (nextFocus) {
       this.setState({ focusedSection: nextFocus.id })
     }
@@ -73,22 +78,21 @@ export default class Boundary extends React.Component {
 
   render() {
     let { children } = this.props
-    let { globalX, globalY, selects } = this.state
     let { registerFocusThief, handleBoundary } = this
 
     children = React.Children.toArray(children)
 
     return (
-      <React.Fragment>
+      <BoundaryContext.Provider value={this.state.coordinates}>
         {children.map((section, index) => {
           if (typeof(section) !== 'object') {
             throw(`Child ${section} of Boundary is invalid!`)
           }
           let key = `boundary-section-${index}`
-          let sectionProps = {...section.props, globalX, globalY, selects, key, registerFocusThief, handleBoundary}
+          let sectionProps = {...section.props, key, registerFocusThief, handleBoundary}
           return this.hasFocus(section) ? React.cloneElement(section, {...sectionProps, hasFocus: true}) : React.cloneElement(section, {...sectionProps})
         })}
-      </React.Fragment>
+      </BoundaryContext.Provider>
     )
   }
 }
