@@ -1,4 +1,4 @@
-import 'preact/devtools'
+import 'preact/debug'
 import '../stylesheets/app.css'
 import React from "react"
 import { BOTTOM, LEFT, RIGHT, TOP } from '../util/keypress'
@@ -24,6 +24,7 @@ export default class App extends React.Component {
             ]}>
               <Item>Hello!</Item>
               <Item>Select</Item>
+              <div>Skip me!</div>
               <Item>Any</Item>
               <Item onSelect={() => console.log('success!')}>Item</Item>
             </Column>

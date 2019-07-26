@@ -26,7 +26,7 @@ export default class Item extends React.Component {
       hasFocus
     })
 
-    return <span className={className}>{children}</span>
+    return <div className={className}>{children}</div>
   }
 }
 

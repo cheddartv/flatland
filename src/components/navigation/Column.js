@@ -2,6 +2,7 @@ import Classnames from 'classnames'
 import React from 'react'
 import { DOWN, UP } from '../../util/keypress'
 import withFocusHandling from './FocusHandling'
+import { focusableChildrenOf } from '../../util/helpers'
 
 class Column extends React.Component {
   constructor(props) {
@@ -9,14 +10,14 @@ class Column extends React.Component {
 
     this.state = {
       focusY: 0,
-      focusedItem: props.children[0]
+      focusedItem: focusableChildrenOf(this)[0]
     }
   }
 
-  get maxFocusY() { return this.props.children.length - 1 }
+  get maxFocusY() { return focusableChildrenOf(this).length - 1 }
 
-  hasFocus(index) {
-    return this.props.hasFocus && this.state.focusY === index
+  hasFocus(item) {
+    return this.props.hasFocus && this.state.focusY === focusableChildrenOf(this).indexOf(item)
   }
 
   handleDown() {
@@ -36,9 +37,9 @@ class Column extends React.Component {
   }
 
   render() {
-    let { children, updateCurrentItem } = this.props
+    let { updateCurrentItem } = this.props
 
-    children = React.Children.toArray(children)
+    const children = React.Children.toArray(this.props.children)
 
     return (
       <div className={Classnames({ ...this.props.classNames, column: true })}>
@@ -48,7 +49,7 @@ class Column extends React.Component {
           }
           let key = `column-item-${index}`
           let itemProps = {...item.props, key, updateCurrentItem }
-          return this.hasFocus(index) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
+          return this.hasFocus(item) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
         })}
       </div>
     )
