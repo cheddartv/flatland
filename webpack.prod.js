@@ -1,16 +1,24 @@
 const path = require('path');
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: './src/index.js',
   devServer: {
     contentBase: './dist',
     host: '0.0.0.0',
     port: 4007,
-    compress: true
+    // compress: true
   },
+  //plugins: [ new MinifyPlugin({}, {}) ],
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: 'flatland.min.js',
+    path: path.resolve(__dirname, 'dist'),
+    library: 'flatland',
+    libraryTarget: 'umd'
+  },
+  externals: {
+    react: 'react',
+    classnames: 'classnames',
   },
   resolve: {
     alias: {
@@ -30,19 +38,6 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/
       },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        use: [
-          'file-loader'
-        ]
-      }
     ]
   }
-};
+}
