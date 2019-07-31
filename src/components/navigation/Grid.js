@@ -71,7 +71,7 @@ class Grid extends React.Component {
   }
 
   render() {
-    let { children, updateCurrentItem, classNames } = this.props
+    let { children, classNames } = this.props
     let { rowClassNames, ...gridClassNames } = classNames
 
     const matrix = this.childrenAsMatrix
@@ -86,7 +86,7 @@ class Grid extends React.Component {
                   throw(`Child ${item} of Grid is invalid!`)
                 }
                 let key = `grid-item-${xIndex}-${yIndex}`
-                let itemProps = {...item.props, key, updateCurrentItem }
+                let itemProps = { ...item.props, key }
                 return this.hasFocus(yIndex, xIndex) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
               })}
             </div>

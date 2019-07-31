@@ -1,5 +1,5 @@
 import React from 'react'
-import { BoundaryContext } from './Context'
+import { BoundaryContext, FocusableContext } from './Context'
 import { DOWN, LEFT, RIGHT, SELECT, UP, pressWas } from '../../util/keypress'
 
 export default function withFocusHandling(WrappedComponent) {
@@ -99,10 +99,14 @@ export default function withFocusHandling(WrappedComponent) {
       const { pushFocusTo, handleBoundary: __, ...restProps } = this.props
       const { updateCurrentItem } = this
 
-      const baseInjectedProps = { handleBoundary: this.composedHandleBoundary(handleBoundary), updateCurrentItem }
+      const baseInjectedProps = { handleBoundary: this.composedHandleBoundary(handleBoundary) }
       const injectedProps = this.hasFocus ? { ...baseInjectedProps, hasFocus: true } : baseInjectedProps
 
-      return <WrappedComponent ref={ref => this.wrappedRef = ref} { ...injectedProps } { ...restProps } />
+      return (
+        <FocusableContext.Provider value={{ updateCurrentItem }}>
+          <WrappedComponent ref={ref => this.wrappedRef = ref} { ...injectedProps } { ...restProps } />
+        </FocusableContext.Provider>
+      )
     }
   }
 

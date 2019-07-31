@@ -37,8 +37,6 @@ class Row extends React.Component {
   }
 
   render() {
-    let { updateCurrentItem } = this.props
-
     const children = React.Children.toArray(this.props.children)
 
     return (
@@ -48,7 +46,7 @@ class Row extends React.Component {
             throw(`Child ${item} of Row is invalid!`)
           }
           let key = `row-item-${index}`
-          let itemProps = {...item.props, key, updateCurrentItem }
+          let itemProps = { ...item.props, key }
           return this.hasFocus(item) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
         })}
       </div>

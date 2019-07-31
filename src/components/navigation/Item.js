@@ -1,5 +1,6 @@
 import React from 'react'
 import Classnames from 'classnames'
+import { FocusableContext } from './Context'
 
 export default class Item extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ export default class Item extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.hasFocus && !prevProps.hasFocus) {
-      this.props.updateCurrentItem(this)
+      this.context.updateCurrentItem(this)
       this.props.onFocus()
     }
   }
@@ -38,3 +39,5 @@ Item.defaultProps = {
 }
 
 Item.focusable = true
+
+Item.contextType = FocusableContext

@@ -9,10 +9,6 @@ import Column from './navigation/Column'
 import Boundary from './navigation/Boundary'
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <div className='container'>

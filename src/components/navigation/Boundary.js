@@ -103,7 +103,3 @@ export default class Boundary extends React.Component {
     )
   }
 }
-
-Boundary.defaultProps = {
-  handleKeydown: ((key) => false)
-}
