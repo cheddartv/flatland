@@ -1,5 +1,7 @@
 import Classnames from 'classnames'
 import React from 'react'
+import { focusableChildrenOf } from '../../util/helpers'
+import item from './Item'
 import { DOWN, LEFT, RIGHT, UP } from '../../util/keypress'
 import withFocusHandling from './FocusHandling'
 
@@ -8,21 +10,25 @@ class Grid extends React.Component {
     super(props)
 
     this.state = {
-      focusX: 0,
-      focusY: 0,
-      focusedItem: props.children[0]
+      focusX: props.initialFocusX || 0,
+      focusY: props.initialFocusY || 0,
+      focusedItem: focusableChildrenOf(this)[0]
     }
   }
 
-  get maxFocusX() { return this.childrenAsMatrix[this.state.focusX].length - 1 }
+  get maxFocusX() { return this.maxFocusOfXAt(this.state.focusY) }
   get maxFocusY() { return this.childrenAsMatrix.length - 1 }
+  maxFocusOfXAt(y) {
+    return this.childrenAsMatrix[y].length - 1
+  }
 
   get childrenAsMatrix() {
-    const numRows = this.props.numRows || Math.ceil(Math.sqrt(this.props.children.length))
+    const numPerRow = this.props.numPerRow || Math.ceil(Math.sqrt(focusableChildrenOf(this).length))
+    const numRows = Math.ceil(focusableChildrenOf(this).length / numPerRow)
 
     let matrix = []
     for ( let i = 0; i < numRows; i++ ) {
-      matrix.push(this.props.children.slice(i * numRows, (i + 1) * numRows))
+      matrix.push(focusableChildrenOf(this).slice(i * numPerRow, (i + 1) * numPerRow))
     }
     return matrix
   }
@@ -33,7 +39,7 @@ class Grid extends React.Component {
 
   handleLeft() {
     if (this.state.focusX == 0) {
-      this.props.handleBoundary(LEFT)
+      this.props.handleBoundary(this, LEFT)
     } else {
       this.setState({ focusX: this.state.focusX - 1 })
     }
@@ -41,7 +47,7 @@ class Grid extends React.Component {
 
   handleUp() {
     if (this.state.focusY == 0) {
-      this.props.handleBoundary(UP)
+      this.props.handleBoundary(this, UP)
     } else {
       this.setState({ focusY: this.state.focusY - 1 })
     }
@@ -49,7 +55,7 @@ class Grid extends React.Component {
 
   handleRight() {
     if (this.state.focusX == this.maxFocusX) {
-      this.props.handleBoundary(RIGHT)
+      this.props.handleBoundary(this, RIGHT)
     } else {
       this.setState({ focusX: this.state.focusX + 1 })
     }
@@ -57,22 +63,24 @@ class Grid extends React.Component {
 
   handleDown() {
     if (this.state.focusY == this.maxFocusY) {
-      this.props.handleBoundary(DOWN)
+      this.props.handleBoundary(this, DOWN)
     } else {
-      this.setState({ focusY: this.state.focusY + 1 })
+
+      this.setState({ focusY: this.state.focusY + 1, focusX: Math.min(this.state.focusX, this.maxFocusOfXAt(this.state.focusY + 1)) })
     }
   }
 
   render() {
-    let { children, updateCurrentItem } = this.props
+    let { children, updateCurrentItem, classNames } = this.props
+    let { rowClassNames, ...gridClassNames } = classNames
 
     const matrix = this.childrenAsMatrix
 
     return (
-      <div className={Classnames({ ...this.props.classNames, grid: true })}>
+      <div className={Classnames({ ...gridClassNames, grid: true })}>
         {matrix.reduce((acc, row, xIndex) => {
           return acc.concat((
-            <div>
+            <div className={Classnames(rowClassNames)}>
               {row.map((item, yIndex) => {
                 if (typeof(item) !== 'object') {
                   throw(`Child ${item} of Grid is invalid!`)
@@ -88,4 +96,7 @@ class Grid extends React.Component {
   }
 }
 
+Grid.defaultProps = {
+  classNames: { rowClass: false }
+}
 export default withFocusHandling(Grid)

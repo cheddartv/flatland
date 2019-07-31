@@ -1,8 +1,7 @@
 import React from 'react'
 
 export function focusableChildrenOf(node) {
-  const nodeName = node.constructor ? node.constructor.name : node.type.name
-  if (nodeName === "Item") {
+  if (node.type && node.type.focusable) {
     return [node]
   }
 

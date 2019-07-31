@@ -20,8 +20,9 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const { hasFocus, children } = this.props
+    const { hasFocus, children, classNames } = this.props
     const className = Classnames({
+      ...classNames,
       item: true,
       hasFocus
     })
@@ -35,3 +36,5 @@ Item.defaultProps = {
   onFocus: (() => {}),
   onSelect: (() => {})
 }
+
+Item.focusable = true

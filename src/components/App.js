@@ -17,10 +17,10 @@ export default class App extends React.Component {
     return (
       <div className='container'>
         <div className='app'>
-          <Boundary>
-            <Column id={'first'} pushFocusTo={[
-              { id: 'second', onExitFrom: RIGHT },
-              { id: 'third', onExitFrom: BOTTOM }
+          <Boundary initialFocusedSection={'first'}>
+            <Column flatId={'first'} pushFocusTo={[
+              { flatId: 'second', onExitFrom: RIGHT },
+              { flatId: 'third', onExitFrom: BOTTOM }
             ]}>
               <Item>Hello!</Item>
               <Item>Select</Item>
@@ -28,16 +28,16 @@ export default class App extends React.Component {
               <Item>Any</Item>
               <Item onSelect={() => console.log('success!')}>Item</Item>
             </Column>
-            <Row id={'second'} pushFocusTo={[
-              { id: 'first', onExitFrom: LEFT },
-              { id: 'third', onExitFrom: BOTTOM }
+            <Row flatId={'second'} pushFocusTo={[
+              { flatId: 'first', onExitFrom: LEFT },
+              { flatId: 'third', onExitFrom: BOTTOM }
             ]}>
               <Item>Or</Item>
               <Item>Navigate</Item>
               <Item>Here!</Item>
             </Row>
-            <Grid id={'third'} pushFocusTo={[
-              { id: 'first', onExitFrom: TOP },
+            <Grid flatId={'third'} pushFocusTo={[
+              { flatId: 'first', onExitFrom: TOP },
             ]}>
               <Item>A</Item>
               <Item>B</Item>

@@ -22,7 +22,7 @@ class Column extends React.Component {
 
   handleDown() {
     if (this.state.focusY == this.maxFocusY) {
-      this.props.handleBoundary(DOWN)
+      this.props.handleBoundary(this, DOWN)
     } else {
       this.setState({ focusY: this.state.focusY + 1 })
     }
@@ -30,7 +30,7 @@ class Column extends React.Component {
 
   handleUp() {
     if (this.state.focusY == 0) {
-      this.props.handleBoundary(UP)
+      this.props.handleBoundary(this, UP)
     } else {
       this.setState({ focusY: this.state.focusY - 1 })
     }

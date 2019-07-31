@@ -1,5 +1,6 @@
 import Classnames from 'classnames'
 import React from 'react'
+import { focusableChildrenOf } from '../../util/helpers'
 import { LEFT, RIGHT } from '../../util/keypress'
 import withFocusHandling from './FocusHandling'
 
@@ -9,21 +10,19 @@ class Row extends React.Component {
 
     this.state = {
       focusX: 0,
-      focusedItem: props.children[0]
+      focusedItem: focusableChildrenOf(this)[0]
     }
   }
 
-  get maxFocusX() {
-    return this.props.children.length - 1
-  }
+  get maxFocusX() { return focusableChildrenOf(this).length - 1 }
 
-  hasFocus(index) {
-    return this.props.hasFocus && this.state.focusX === index
+  hasFocus(item) {
+    return this.props.hasFocus && this.state.focusX === focusableChildrenOf(this).indexOf(item)
   }
 
   handleRight() {
     if (this.state.focusX == this.maxFocusX) {
-      this.props.handleBoundary(RIGHT)
+      this.props.handleBoundary(this, RIGHT)
     } else {
       this.setState({ focusX: this.state.focusX + 1 })
     }
@@ -31,16 +30,16 @@ class Row extends React.Component {
 
   handleLeft() {
     if (this.state.focusX == 0) {
-      this.props.handleBoundary(LEFT)
+      this.props.handleBoundary(this, LEFT)
     } else {
       this.setState({ focusX: this.state.focusX - 1 })
     }
   }
 
   render() {
-    let { children, updateCurrentItem } = this.props
+    let { updateCurrentItem } = this.props
 
-    children = React.Children.toArray(children)
+    const children = React.Children.toArray(this.props.children)
 
     return (
       <div className={Classnames({ ...this.props.classNames, row: true })}>
@@ -50,7 +49,7 @@ class Row extends React.Component {
           }
           let key = `row-item-${index}`
           let itemProps = {...item.props, key, updateCurrentItem }
-          return this.hasFocus(index) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
+          return this.hasFocus(item) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
         })}
       </div>
     )

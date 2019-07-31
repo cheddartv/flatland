@@ -1,11 +1,10 @@
 import React from 'react'
-import { BoundaryContext } from './BoundaryContext'
+import { BoundaryContext } from './Context'
 import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 
 export default class Boundary extends React.Component {
   constructor(props) {
     super(props)
-    const childrenToArray = React.Children.toArray(props.children)
 
     this.state = {
       coordinates: {
@@ -13,11 +12,12 @@ export default class Boundary extends React.Component {
         globalY: 0,
         selects: 0,
       },
-      focusedSection: childrenToArray[0].props.id,
+      focusedSection: props.initialFocusedSection,
       focusThieves: {}
     }
 
     this.handleKeydown = this.handleKeydown.bind(this)
+    this.composedHandleKeydown = this.composedHandleKeydown.bind(this)
     this.incrementGlobals = this.incrementGlobals.bind(this)
     this.registerFocusThief = this.registerFocusThief.bind(this)
     this.handleBoundary = this.handleBoundary.bind(this)
@@ -25,7 +25,14 @@ export default class Boundary extends React.Component {
   }
 
   componentWillMount() {
-    window.addEventListener("keydown", this.handleKeydown)
+    window.addEventListener("keydown", this.composedHandleKeydown(this.handleKeydown))
+  }
+
+  composedHandleKeydown(rootHandleKeydown) {
+    if (this.props.handleKeydown) {
+      return ((key) => this.props.handleKeydown(rootHandleKeydown, key))
+    }
+    return rootHandleKeydown
   }
 
   handleSelect() {
@@ -34,7 +41,7 @@ export default class Boundary extends React.Component {
   }
 
   registerFocusThief(thief, stealable) {
-    this.setState({ focusThieves: { ...this.state.focusThieves, [thief]: [ ...(this.state.focusThieves[thief] || []), stealable] } })
+    this.state.focusThieves = { ...this.state.focusThieves, [thief]: [ ...(this.state.focusThieves[thief] || []), stealable] }
   }
 
   incrementGlobals(x, y) {
@@ -46,53 +53,57 @@ export default class Boundary extends React.Component {
     switch(key.keyCode) {
       case LEFT:
         this.incrementGlobals(-1, 0)
-        break;
+        break
       case UP:
         this.incrementGlobals(0, -1)
-        break;
+        break
       case RIGHT:
         this.incrementGlobals(1, 0)
-        break;
+        break
       case DOWN:
         this.incrementGlobals(0, 1)
-        break;
+        break
       case SELECT:
         this.handleSelect()
-        break;
+        break
       default:
-      break;
+        break;
     }
-  }
-
-  hasFocus(section) {
-    return this.state.focusedSection === section.props.id
   }
 
   handleBoundary(ref, dir) {
-    const focusThieves = this.state.focusThieves[ref.props.id] ||  []
+    const focusThieves = this.state.focusThieves[ref.props.flatId] ||  []
     const nextFocus = focusThieves.find(ft => ft.onExitFrom === dir)
     if (nextFocus) {
-      this.setState({ focusedSection: nextFocus.id })
+      this.setState({ focusedSection: nextFocus.flatId })
     }
+  }
+
+  get boundaryContext() {
+    let { focusedSection, coordinates } = this.state
+    let { registerFocusThief, handleBoundary } = this
+    return { ...coordinates, focusedSection, registerFocusThief, handleBoundary }
   }
 
   render() {
     let { children } = this.props
-    let { registerFocusThief, handleBoundary } = this
 
     children = React.Children.toArray(children)
 
     return (
-      <BoundaryContext.Provider value={this.state.coordinates}>
+      <BoundaryContext.Provider value={this.boundaryContext}>
         {children.map((section, index) => {
           if (typeof(section) !== 'object') {
             throw(`Child ${section} of Boundary is invalid!`)
           }
           let key = `boundary-section-${index}`
-          let sectionProps = {...section.props, key, registerFocusThief, handleBoundary}
-          return this.hasFocus(section) ? React.cloneElement(section, {...sectionProps, hasFocus: true}) : React.cloneElement(section, {...sectionProps})
+          return React.cloneElement(section, { ...section.props, key })
         })}
       </BoundaryContext.Provider>
     )
   }
+}
+
+Boundary.defaultProps = {
+  handleKeydown: ((key) => false)
 }
