@@ -10,7 +10,7 @@ export default function withFocusHandling(WrappedComponent) {
 
       this.state = {
         currentItem: { handleSelect: (() => {}) },
-        prevContext: {globalX: 0, globalY: 0, selects: 0},
+        prevContext: { globalX: 0, globalY: 0, selects: 0 },
       }
       this.updateCurrentItem = this.updateCurrentItem.bind(this)
       this.handleKeypress = this.handleKeypress.bind(this)
@@ -18,7 +18,9 @@ export default function withFocusHandling(WrappedComponent) {
 
     componentDidMount() {
       for (var stealable of this.props.pushFocusTo) {
-        this.context.registerFocusThief(this.props.flatId, stealable)
+        if (this.context.registerFocusThief) {
+          this.context.registerFocusThief(this.props.flatId, stealable)
+        }
       }
     }
 

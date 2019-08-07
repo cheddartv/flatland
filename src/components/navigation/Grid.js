@@ -10,9 +10,9 @@ class Grid extends React.Component {
     super(props)
 
     this.state = {
-      focusX: props.initialFocusX || 0,
-      focusY: props.initialFocusY || 0,
-      focusedItem: focusableChildrenOf(this)[0]
+      focusX: 0,
+      focusY: 0,
+      focusedItem: focusableChildrenOf(this)[0],
     }
   }
 
@@ -31,6 +31,11 @@ class Grid extends React.Component {
       matrix.push(focusableChildrenOf(this).slice(i * numPerRow, (i + 1) * numPerRow))
     }
     return matrix
+  }
+
+  driveFocus(driverFn) {
+    const [newFocusX, newFocusY] = driverFn(this.state.focusX, this.state.focusY)
+    this.setState({ focusX: newFocusX, focusY: newFocusY })
   }
 
   hasFocus(x, y) {
@@ -65,7 +70,6 @@ class Grid extends React.Component {
     if (this.state.focusY == this.maxFocusY) {
       this.props.handleBoundary(this, DOWN)
     } else {
-
       this.setState({ focusY: this.state.focusY + 1, focusX: Math.min(this.state.focusX, this.maxFocusOfXAt(this.state.focusY + 1)) })
     }
   }
@@ -78,16 +82,16 @@ class Grid extends React.Component {
 
     return (
       <div className={Classnames({ ...gridClassNames, grid: true })}>
-        {matrix.reduce((acc, row, xIndex) => {
+        {matrix.reduce((acc, row, yIndex) => {
           return acc.concat((
-            <div className={Classnames(rowClassNames)}>
-              {row.map((item, yIndex) => {
+            <div key={yIndex} className={Classnames(rowClassNames)}>
+              {row.map((item, xIndex) => {
                 if (typeof(item) !== 'object') {
                   throw(`Child ${item} of Grid is invalid!`)
                 }
                 let key = `grid-item-${xIndex}-${yIndex}`
                 let itemProps = { ...item.props, key }
-                return this.hasFocus(yIndex, xIndex) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
+                return this.hasFocus(xIndex, yIndex) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
               })}
             </div>
           ))},[])}
