@@ -74,7 +74,7 @@ export default class Boundary extends React.Component {
   handleBoundary(ref, dir) {
     const focusThieves = this.state.focusThieves[ref.props.flatId] ||  []
     const nextFocus = focusThieves.find(ft => ft.onExitFrom === dir)
-    if (nextFocus) {
+    if (nextFocus && (typeof nextFocus.unless !=='function' || !nextFocus.unless())) {
       this.setState({ focusedSection: nextFocus.flatId })
     }
   }
