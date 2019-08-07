@@ -96,8 +96,8 @@ export default class Boundary extends React.Component {
           if (typeof(section) !== 'object') {
             throw(`Child ${section} of Boundary is invalid!`)
           }
-          let key = `boundary-section-${index}`
-          return React.cloneElement(section, { ...section.props, key })
+          let key = section.key || `boundary-section-${index}`
+          return React.cloneElement(section, { key, ...section.props })
         })}
       </BoundaryContext.Provider>
     )
