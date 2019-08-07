@@ -51,10 +51,18 @@ class Grid extends React.Component {
   }
 
   handleUp() {
+    const currentMaxFocusX = this.maxFocusOfXAt(this.state.focusY)
+    const nextMaxFocusX =  this.maxFocusOfXAt(this.state.focusY - 1)
+    let nextFocusX = this.state.focusX
+
+    if (nextMaxFocusX > currentMaxFocusX) {
+      nextFocusX = this.state.focusX * Math.floor(nextMaxFocusX / currentMaxFocusX)
+    }
+
     if (this.state.focusY == 0) {
       this.props.handleBoundary(this, UP)
     } else {
-      this.setState({ focusY: this.state.focusY - 1 })
+      this.setState({ focusY: this.state.focusY - 1, focusX: nextFocusX })
     }
   }
 
@@ -67,10 +75,18 @@ class Grid extends React.Component {
   }
 
   handleDown() {
+    const currentMaxFocusX = this.maxFocusOfXAt(this.state.focusY)
+    const nextMaxFocusX =  this.maxFocusOfXAt(this.state.focusY + 1)
+    let nextFocusX = this.state.focusX
+
+    if (nextMaxFocusX < currentMaxFocusX) {
+      nextFocusX = Math.floor(this.state.focusX / Math.floor(currentMaxFocusX / nextMaxFocusX))
+    }
+
     if (this.state.focusY == this.maxFocusY) {
       this.props.handleBoundary(this, DOWN)
     } else {
-      this.setState({ focusY: this.state.focusY + 1, focusX: Math.min(this.state.focusX, this.maxFocusOfXAt(this.state.focusY + 1)) })
+      this.setState({ focusY: this.state.focusY + 1, focusX: Math.min(nextFocusX, nextMaxFocusX) })
     }
   }
 
