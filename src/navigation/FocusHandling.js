@@ -1,6 +1,6 @@
 import React from 'react'
 import { BoundaryContext, FocusableContext } from './Context'
-import { DOWN, LEFT, RIGHT, SELECT, UP, pressWas } from '../../util/keypress'
+import { DOWN, LEFT, RIGHT, SELECT, UP, pressWas } from '../util/keypress'
 
 export default function withFocusHandling(WrappedComponent) {
    class Focusable extends React.Component {

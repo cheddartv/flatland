@@ -1,6 +1,6 @@
 import React from 'react'
 import { BoundaryContext } from './Context'
-import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
+import { DOWN, LEFT, RIGHT, SELECT, UP } from '../util/keypress'
 
 export default class Boundary extends React.Component {
   constructor(props) {

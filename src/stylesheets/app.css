@@ -1,6 +1,0 @@
-.row .item { display: inline-block }
-.row { display: inline-block }
-.column { display: inline-block }
-.item { display: block }
-.grid .item { display: inline-block; padding: 10px }
-.item.hasFocus { border: red 1px solid }
