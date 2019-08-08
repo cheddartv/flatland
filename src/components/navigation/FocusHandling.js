@@ -24,6 +24,10 @@ export default function withFocusHandling(WrappedComponent) {
       }
     }
 
+    componentWillUnmount() {
+      this.context.deregisterFocusThief(this.props.flatId)
+    }
+
     defaultHandleDirection(dir) {
       return (() => this.context.handleBoundary(this.wrappedRef, dir)).bind(this)
     }
@@ -97,7 +101,7 @@ export default function withFocusHandling(WrappedComponent) {
     }
 
     render() {
-      const { globalX, globalY, handleBoundary, registerFocusThief } = this.context
+      const { globalX, globalY, handleBoundary } = this.context
       const { pushFocusTo, handleBoundary: __, ...restProps } = this.props
       const { updateCurrentItem } = this
 

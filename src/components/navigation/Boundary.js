@@ -20,6 +20,7 @@ export default class Boundary extends React.Component {
     this.composedHandleKeydown = this.composedHandleKeydown.bind(this)
     this.incrementGlobals = this.incrementGlobals.bind(this)
     this.registerFocusThief = this.registerFocusThief.bind(this)
+    this.deregisterFocusThief = this.deregisterFocusThief.bind(this)
     this.handleBoundary = this.handleBoundary.bind(this)
     this.handleSelect = this.handleSelect.bind(this)
   }
@@ -40,8 +41,12 @@ export default class Boundary extends React.Component {
     this.setState({ coordinates: { ...this.state.coordinates, selects: selects + 1 } })
   }
 
-  registerFocusThief(thief, stealable) {
-    this.state.focusThieves = { ...this.state.focusThieves, [thief]: [ ...(this.state.focusThieves[thief] || []), stealable] }
+  registerFocusThief(thiefId, stealable) {
+    this.state.focusThieves = { ...this.state.focusThieves, [thiefId]: [ ...(this.state.focusThieves[thiefId] || []), stealable] }
+  }
+
+  deregisterFocusThief(thiefId) {
+    delete this.state.focusThieves[thiefId]
   }
 
   incrementGlobals(x, y) {
@@ -81,8 +86,8 @@ export default class Boundary extends React.Component {
 
   get boundaryContext() {
     let { focusedSection, coordinates } = this.state
-    let { registerFocusThief, handleBoundary } = this
-    return { ...coordinates, focusedSection, registerFocusThief, handleBoundary }
+    let { registerFocusThief, deregisterFocusThief, handleBoundary } = this
+    return { ...coordinates, focusedSection, registerFocusThief, deregisterFocusThief, handleBoundary }
   }
 
   render() {
