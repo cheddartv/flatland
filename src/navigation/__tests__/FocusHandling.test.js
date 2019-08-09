@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { def } from 'bdd-lazy-var/global'
-import { DOWN, LEFT } from '../../util/keypress'
+import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 import Boundary from '../Boundary'
 import Grid from '../Grid'
 
@@ -55,5 +55,38 @@ describe('propagating down to wrapped component', () => {
     $rendered.find('Grid').instance().handleLeft = undefined
     $rendered.instance().handleKeypress(LEFT)
     expect(spy).toHaveBeenCalledWith(LEFT)
+  })
+})
+
+describe('componentDidUpdate', () => {
+  beforeEach(() => {
+    Object.defineProperty($rendered.instance(), 'hasFocus', { get: (() => true) })
+    $rendered.instance().handleKeypress = $mockFn
+  })
+
+
+  it('calls handleKeypress with LEFT when pressWas LEFT', () => {
+    $rendered.setState({ prevContext: { globalX: 1, globalY: 0 } })
+    expect($mockFn).toHaveBeenCalledWith(LEFT)
+  })
+
+  it('calls handleKeypress with UP when pressWas UP', () => {
+    $rendered.setState({ prevContext: { globalX: 0, globalY: 1 } })
+    expect($mockFn).toHaveBeenCalledWith(UP)
+  })
+
+  it('calls handleKeypress with RIGHT when pressWas RIGHT', () => {
+    $rendered.setState({ prevContext: { globalX: -1, globalY: 0 } })
+    expect($mockFn).toHaveBeenCalledWith(RIGHT)
+  })
+
+  it('calls handleKeypress with DOWN when pressWas DOWN', () => {
+    $rendered.setState({ prevContext: { globalX: 0, globalY: -1 } })
+    expect($mockFn).toHaveBeenCalledWith(DOWN)
+  })
+
+  it('calls handleKeypress with SELECT when pressWas SELECT', () => {
+    $rendered.setState({ prevContext: { globalX: 0, globalY: 0, selects: -1 } })
+    expect($mockFn).toHaveBeenCalledWith(SELECT)
   })
 })

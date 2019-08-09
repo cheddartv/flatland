@@ -58,23 +58,18 @@ export default function withFocusHandling(WrappedComponent) {
         if (this.hasFocus) {
           switch(pressWas(prevContext, this.context)) {
             case LEFT:
-              console.log("LEFT")
               this.handleKeypress(LEFT)
               break
             case UP:
-              console.log("UP")
               this.handleKeypress(UP)
               break
             case RIGHT:
-              console.log("RIGHT")
               this.handleKeypress(RIGHT)
               break
             case DOWN:
-              console.log("DOWN")
               this.handleKeypress(DOWN)
               break
             case SELECT:
-              console.log("SELECT")
               this.handleKeypress(SELECT)
               break
             default:

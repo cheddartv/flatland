@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { def } from 'bdd-lazy-var/global'
-import { BOTTOM, LEFT } from '../../util/keypress'
+import { BOTTOM, DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 import Boundary from '../Boundary'
 
 def('rendered', () => ( mount(<Boundary></Boundary>)))
@@ -54,5 +54,36 @@ describe('handleBoundary', () => {
     $rendered.setState({ focusThieves: { first: [{ flatId: 'second', onExitFrom: LEFT, unless: (() => true) }] } })
     $rendered.instance().handleBoundary({ props: { flatId: 'first' } }, LEFT)
     expect($rendered.state().focusedSection).toBe('first')
+  })
+})
+
+describe('handleKeydown', () => {
+  let spy
+  beforeEach(() => spy = jest.spyOn($rendered.instance(), 'incrementGlobals'))
+
+  it('calls incrementGlobals with -1, 0 when press was LEFT', () => {
+    $rendered.instance().handleKeydown({ keyCode: LEFT })
+    expect(spy).toHaveBeenCalledWith(-1, 0)
+  })
+
+  it('calls incrementGlobals with 0, -1 when press was UP', () => {
+    $rendered.instance().handleKeydown({ keyCode: UP })
+    expect(spy).toHaveBeenCalledWith(0, -1)
+  })
+
+  it('calls incrementGlobals with 1, 0 when press was RIGHT', () => {
+    $rendered.instance().handleKeydown({ keyCode: RIGHT })
+    expect(spy).toHaveBeenCalledWith(1, 0)
+  })
+
+  it('calls incrementGlobals with 0, 1 when press was DOWN', () => {
+    $rendered.instance().handleKeydown({ keyCode: DOWN })
+    expect(spy).toHaveBeenCalledWith(0, 1)
+  })
+
+  it('calls handleSelect when press was SELECT', () => {
+    spy = jest.spyOn($rendered.instance(), 'handleSelect')
+    $rendered.instance().handleKeydown({ keyCode: SELECT })
+    expect(spy).toHaveBeenCalled()
   })
 })
