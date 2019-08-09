@@ -1,25 +1,38 @@
 import React from 'react'
 import { def } from 'bdd-lazy-var/global'
-import { mount } from 'enzyme'
+import { shallow, mount } from 'enzyme'
+import { FocusableContext } from '../context'
 import Item from '../Item'
 
-def('rendered', () => ( mount(<Item />) ))
+def('rendered', () => ( mount(<Item /> )))
+def('mockFn', () => jest.fn())
 
 it('renders without crashing', () => {
   expect($rendered)
 })
 
-it('calls props.onFocus when hasFocus becomes true', () => {
-  let mockFn = jest.fn()
-  $rendered.setProps({onFocus: mockFn, hasFocus: true})
-  expect(mockFn).toHaveBeenCalled()
+it('should be focusable', () => {
+  expect(Item.focusable).toBeTruthy()
 })
 
+describe('when props.onFocus becomes true', () => {
+  it('calls props.onFocus', () => {
+    $rendered.setProps({onFocus: $mockFn, hasFocus: true})
+    expect($mockFn).toHaveBeenCalled()
+  })
+
+  it('calls context.updateCurrentItem', () => {
+    const spy = jest.spyOn($rendered.instance().context, 'updateCurrentItem')
+    $rendered.setProps({hasFocus: true})
+    expect(spy).toHaveBeenCalledWith($rendered.instance())
+  })
+})
+
+
 it('calls props.onSelect when selected', () => {
-  let mockFn = jest.fn()
-  $rendered.setProps({onSelect: mockFn, hasFocus: true})
-  $rendered.instance().onSelect()
-  expect(mockFn).toHaveBeenCalled()
+  $rendered.setProps({onSelect: $mockFn, hasFocus: true})
+  $rendered.instance().handleSelect()
+  expect($mockFn).toHaveBeenCalled()
 })
 
 describe('with children', () => {
