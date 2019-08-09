@@ -8,10 +8,7 @@ class Row extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      focusX: 0,
-      focusedItem: focusableChildrenOf(this)[0]
-    }
+    this.state = { focusX: 0 }
   }
 
   get maxFocusX() { return focusableChildrenOf(this).length - 1 }

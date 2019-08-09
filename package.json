@@ -16,6 +16,7 @@
       "<rootDir>/src/navigation/__tests__/*.js",
       "<rootDir>/src/util/__tests__/*.js"
     ],
+    "testPathIgnorePatterns": [ "<rootDir>/src/navigation/__tests__/shared.test.js" ],
     "setupFiles": ["<rootDir>/config/setupTests.js"]
   },
   "repository": {

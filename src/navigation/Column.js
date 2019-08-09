@@ -8,10 +8,7 @@ class Column extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      focusY: 0,
-      focusedItem: focusableChildrenOf(this)[0]
-    }
+    this.state = { focusY: 0 }
   }
 
   get maxFocusY() { return focusableChildrenOf(this).length - 1 }

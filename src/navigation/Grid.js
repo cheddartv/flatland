@@ -59,7 +59,7 @@ class Grid extends React.Component {
       let nextFocusX = this.state.focusX
 
       if (nextMaxFocusX > currentMaxFocusX) {
-        nextFocusX = this.state.focusX * Math.floor(nextMaxFocusX / currentMaxFocusX)
+        nextFocusX = this.state.focusX * Math.floor(nextMaxFocusX / (currentMaxFocusX || 1))
       }
 
       this.setState({ focusY: this.state.focusY - 1, focusX: nextFocusX })
