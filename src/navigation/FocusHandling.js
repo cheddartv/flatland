@@ -85,9 +85,7 @@ export default function withFocusHandling(WrappedComponent) {
       this.state.prevContext = this.context
     }
 
-    updateCurrentItem(item) {
-      this.setState({ currentItem: item })
-    }
+    updateCurrentItem(item) { this.setState({ currentItem: item }) }
 
     get hasFocus() {
       return this.props.flatId == this.context.focusedSection

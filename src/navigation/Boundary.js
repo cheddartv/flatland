@@ -25,7 +25,7 @@ export default class Boundary extends React.Component {
     this.handleSelect = this.handleSelect.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     window.addEventListener("keydown", this.composedHandleKeydown(this.handleKeydown))
   }
 
