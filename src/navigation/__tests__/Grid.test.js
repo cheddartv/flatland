@@ -48,7 +48,7 @@ describe('with children', () => {
 
 
   describe('with specified num per row', () => {
-    def('gridProps', () => ({ numPerRow: 2 }))
+    def('gridProps', () => ({ itemsPerRow: 2 }))
     it('has maxFocusX of 1', () => {
       expect($rendered.instance().maxFocusX).toBe(1)
     })

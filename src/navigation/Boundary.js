@@ -12,7 +12,7 @@ export default class Boundary extends React.Component {
         globalY: 0,
         selects: 0,
       },
-      focusedSection: props.initialFocusedSection,
+      activeSection: props.initialActiveSection || props.children[0],
       focusThieves: {}
     }
 
@@ -80,14 +80,14 @@ export default class Boundary extends React.Component {
     const focusThieves = this.state.focusThieves[ref.props.flatId] ||  []
     const nextFocus = focusThieves.find(ft => ft.onExitFrom === dir)
     if (nextFocus && (typeof nextFocus.unless !=='function' || !nextFocus.unless())) {
-      this.setState({ focusedSection: nextFocus.flatId })
+      this.setState({ activeSection: nextFocus.flatId })
     }
   }
 
   get boundaryContext() {
-    let { focusedSection, coordinates } = this.state
+    let { activeSection, coordinates } = this.state
     let { registerFocusThief, deregisterFocusThief, handleBoundary } = this
-    return { ...coordinates, focusedSection, registerFocusThief, deregisterFocusThief, handleBoundary }
+    return { ...coordinates, activeSection, registerFocusThief, deregisterFocusThief, handleBoundary }
   }
 
   render() {

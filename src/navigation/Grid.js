@@ -23,12 +23,12 @@ class Grid extends React.Component {
   }
 
   get childrenAsMatrix() {
-    const numPerRow = this.props.numPerRow || Math.ceil(Math.sqrt(focusableChildrenOf(this).length))
-    const numRows = Math.ceil(focusableChildrenOf(this).length / numPerRow)
+    const itemsPerRow = this.props.itemsPerRow || Math.ceil(Math.sqrt(focusableChildrenOf(this).length))
+    const numRows = Math.ceil(focusableChildrenOf(this).length / itemsPerRow)
 
     let matrix = []
     for ( let i = 0; i < numRows; i++ ) {
-      matrix.push(focusableChildrenOf(this).slice(i * numPerRow, (i + 1) * numPerRow))
+      matrix.push(focusableChildrenOf(this).slice(i * itemsPerRow, (i + 1) * itemsPerRow))
     }
     return matrix
   }
