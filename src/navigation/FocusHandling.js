@@ -1,5 +1,5 @@
 import React from 'react'
-import { BoundaryContext, FocusableContext } from './Context'
+import { FlatlandContext, FocusableContext } from './Context'
 import { DOWN, LEFT, RIGHT, SELECT, UP, pressWas } from '../util/keypress'
 
 export default function withFocusHandling(WrappedComponent) {
@@ -114,6 +114,6 @@ export default function withFocusHandling(WrappedComponent) {
     flatId: '',
     pushFocusTo: []
   }
-  Focusable.contextType = BoundaryContext
+  Focusable.contextType = FlatlandContext
   return Focusable
 }

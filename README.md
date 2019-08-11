@@ -2,14 +2,14 @@
 
 ## Usage ##
 
-### Boundaries ###
+In the beginning, there was `Flatland`.
 
-In the beginning, there was a `Boundary`. Your boundary component is responsible for listening to keypress events. It also keeps track of which child section is active, via state.
+Your flatland component is responsible for listening to keypress events. It also keeps track of which child section is active, via state.
 
 ```
-import { Boundary, Column, Grid } from 'flatland'
+import { Flatland, Column, Grid } from 'flatland'
 
-<Boundary initialActiveSection={'navColumn'} handleKeydown={this.handleKeydown}>
+<Flatland initialActiveSection={'navColumn'} handleKeydown={this.handleKeydown}>
   <Column flatId={'navColumn'}>
     <Item>Comedy</Item>
     <Item>Drama</Item>
@@ -19,10 +19,10 @@ import { Boundary, Column, Grid } from 'flatland'
   <Grid flatId={'videoResults'} itemsPerRow={3}>
     {this.videoItems}
   </Grid>
-</Boundary>
+</Flatland>
 ```
 
-`Boundary` will listen to the browser's keypress events, and will attempt to re-render focus when `LEFT`, `UP`, `RIGHT`, or `DOWN`is pressed. If you need to alias keypresses, you may do so by providing a custom `handleKeydown` function prop:
+`Flatland` will listen to the browser's keypress events, and will attempt to re-render focus when `LEFT`, `UP`, `RIGHT`, or `DOWN`is pressed. If you need to alias keypresses, you may do so by providing a custom `handleKeydown` function prop:
 
 ```
 import { BACK, LEFT } from 'flatland'
@@ -35,10 +35,11 @@ handleKeydown(propagateKeydown, key) {
     default:
       propagateKeydown(key)
   }
+}
 ```
 
 
-You should configure your Boundary with a `flatId` value that points to your `initialActiveSection`. The boundary component will delegate to the active section to determine which `Item` is currently focused.
+You should configure your Flatland component with a `initialActiveSection` prop that matches the `flatId` of the section you would like to be initally focued. The flatland component will delegate to the active section to determine which `Item` is currently focused.
 
 ### Item ###
 `Items` are the atomic components of your Flatland app. An item is a component that can receive focus:
@@ -72,6 +73,24 @@ An item will have a classname of `.item` by default, and will also have classnam
   <Item>Action</Item>
 </Column>
 ```
+
+Note that Flatland is smart enough to pluck items out of any nesting of child components:
+
+```
+<Column flatId={'navColumn'}>
+  <Item>THIS</Item>
+  <div>
+    <Item>IS</Item>
+    <AnotherComponent>
+      <Item>ALSO</Item>
+    </AnotherComponent>
+  </div>
+  <img href={'someImage'} />
+  <Item>VALID</Item>
+</Column>
+```
+
+
 You must pass a section a `flatId` prop, which is a string that will be used to pass focus **from section to section** (more on this below).
 
 Like items, sections can be passed a `classNames` prop.
@@ -80,9 +99,9 @@ The first child item of a section will have focus when the component first mount
 
 Flatland has three simple section types, `Column`, `Row`, and `Grid`. Columns and Rows promote and demote focus of child items in one dimension. Grids promote and demote focus in two dimensions.
 
-For example, the `navColumn` above will promotes and demotes focus on the `UP` and `DOWN` events. Assuming the app just mounted, pressing `DOWN` will promote focus from `<Item>Comedy</Item>` to `<Item>Drama</Item>`. The same promotion would happen if this example were a `Row` instead, and `RIGHT` was pressed.
+For example, the `navColumn` above will promote and demotes focus on the `UP` and `DOWN` events. Assuming the `navColumn` component just mounted, pressing `DOWN` will promote focus from `<Item>Comedy</Item>` to `<Item>Drama</Item>`. The same promotion would happen if this example were a `Row` instead, and `RIGHT` was pressed.
 
-`Grid` will create a matrix of children items, which you can influence with the `itemsPerRow` prop.
+`Grid` will create a matrix of children items, which will be distributed across the X and Y axis of your flatland app. You can control the length of the axes with the `itemsPerRow` prop.
 
 To make sense of how sections pass focus from item to item, it may be helpful for you to define default global base stylings for `.item`, `.column`, `.row`, and `grid`:
 
@@ -106,9 +125,9 @@ There are only four ways to leave an active section in Flatland. In the `navColu
 When a section boundary is hit, a new section may steal focus from the active section. This is configured via the `pushFocusTo` prop:
 
 ```
-import { Boundary, Column, Grid, RIGHT, LEFT, RIGHT } from 'flatland'
+import { Flatland, Column, Grid, RIGHT, LEFT, RIGHT } from 'flatland'
 
-<Boundary>
+<Flatland>
   <Column flatId={'navColumn'} pushFocusTo={[
     { flatId: 'videoResults', onExitFrom: RIGHT }
   ]}>
@@ -123,7 +142,7 @@ import { Boundary, Column, Grid, RIGHT, LEFT, RIGHT } from 'flatland'
 </Boundary>
 ```
 
-Assuming there is another section within the Boundary with the specified `flatId`, pressing RIGHT while the `navColumn` is active will pass focus to the `videoResults` Grid. If no section can become active, the active section remains active, and the focused item remains focused.
+Assuming there is another child section of `Flatland` with `flatId` equal to `videoResults`, pressing RIGHT while the `navColumn` is active will pass focus to the `videoResults` Grid. If no section can become active, the active section remains active, and the focused item remains focused.
 
 ### Overriding Boundaries ###
 
@@ -157,4 +176,183 @@ handleBoundary(propagateBoundary, ref, dir) {
 </Grid>
 ```
 
-In the above example, `driveFocus` is a method exposed on `Grid` that permits the caller to override the currently focused item. Its argument is a function that returns an array with the new coordinates of focus. By keeping the value of x constant, and only modifiying the y value, the user has horizontal context from their previous page when navigating to a new page of resources.
+In the above example, `driveFocus` is a method exposed on `Grid` that permits the caller to override the currently focused item. Its argument is a function that returns an array with the new coordinates of focus. By keeping the value of the X focus constant, and only modifiying the Y focus value, the user has horizontal context from their previous page when navigating to a new page of resources.
+
+### Composition ###
+
+As your app grows, you may want to compose your simple section types to better organize your components.
+
+Here is an example of a simple app layout using Flatland:
+
+**Layout.js**
+```
+import React from "react"
+import NavColumn from './columns/NavColumn'
+import VideoListGrid from './grids/VideoListGrid'
+import { Flatland } from 'flatland'
+import { fetchVideos } from '../util/fetchVideos'
+
+export default class Layout extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.updateCurrentSection = this.updateCurrentSection.bind(this)
+    this.startVideoPlayer = this.startVideoPlayer.bind(this)
+    this.state = {
+      currentCategory: 'Comedy'
+      videos = []
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { category } = this.state
+
+    if (prevState.currentCategory != category) {
+      this.setState({ videos: fetchVideos(category) })
+    }
+  }
+
+  updateCurrentSection(categoryName) {
+    this.setState({ currentCategory: categoryName })
+  }
+
+  startVideoPlayer(url) {
+    // start fullscreen video player here
+  }
+
+  render() {
+    return (
+      <Flatland initialActiveSection={'navColumn'}>
+        <NavColumn onFocus={this.updateCurrentSection} startVideoPlayer={this.startVideoPlayer}/>
+        <VideoListGrid videos={this.videos} /> // 'videoResults' composed here
+      </Flatland>
+    )
+  }
+}
+
+```
+
+**NavColumn.js**
+```
+import React from "react"
+import LiveVideoItem from '../items/LiveVideoItem'
+import { Column, Item, RIGHT } from 'flatland'
+
+export default class NavColumn extends React.Component {
+
+  itemProps(name) {
+    return { onFocus: () => this.props.onFocus(name) }
+  }
+
+  navItem(name) {
+    return <Item {...this.itemProps(name)}>{name}</Item>
+  }
+
+  render() {
+    return (
+      <Column flatId={'navColumn'} pushFocusTo={[{ flatId: 'videoResults', onExitFrom: RIGHT }]}>
+        <LiveVideoItem onSelect={this.props.startVideoPlayer}/>
+        {this.navItem('Comedy')}
+        {this.navItem('Drama')}
+        {this.navItem('Documentary')}
+        {this.navItem('Action')}
+      </Column>
+    )
+  }
+}
+
+```
+
+**LiveVideoItem.js**
+```
+import React from "react"
+import { Item } from "flatland"
+import { livestreamURL } from "../../util/livestreamURL"
+
+export default class LiveVideoItem extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.onSelect = this.onSelect.bind(this)
+  }
+
+  onSelect() {
+    this.props.startVideoPlayer(livestreamURL)
+  }
+
+  render() {
+    return (
+      <Item hasFocus={this.props.hasFocus} classNames={{"liveVideoItem": true}} onSelect={this.onSelect}/>
+    )
+  }
+}
+
+LiveVideoItem.defaultProps = {
+  startVideoPlayer: (() => {})
+}
+LiveVideoItem.focusable = true
+
+```
+
+
+
+**Note on composition:** When composing an item component, make sure to:
+* Declare a `.focusable = true` property on the class of the component.
+* Pass along the `hasFocus` prop to the child item. This prop will be available to any `focusable` child of a section (`Item` is focusable by default).
+
+### Creating new sections ###
+
+Creating your own sections is easy in Flatland. You will need to define a class-based component that defines any of the following methods:
+
+* `handleLeft`
+* `handleUp`
+* `handleRight`
+* `handleDown`
+* `handleSelect`
+
+You also need to export your Section as a HOC using `withFocusHandling`.
+
+Any component `withFocusHandling` will be passed a `handleBoundary(ref, dir)` prop, that should be called when a boundary is crossed:
+
+```
+import React from 'react'
+import { withFocusHandling, focusableChildrenOf. UP } from flatland'
+
+class OnlyGoesUp extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { focusY: 5 }
+  }
+
+  handleUp() {
+    if (this.state.focusY == 0) {
+      this.props.handleBoundary(this, UP)
+    } else {
+      this.setState({ focusY: this.state.focusY - 1 })
+    }
+  }
+
+  hasFocus(item) {
+    return this.props.hasFocus && this.state.focusY === focusableChildrenOf(this).indexOf(item)
+  }
+
+  render() {
+    const children = React.Children.toArray(this.props.children)
+
+    return (
+      <div className={Classnames({ ...this.props.classNames, onlyGoesUp: true })}>
+        {children.map((item, index) => {
+          let key = `up-item-${index}`
+          let itemProps = { ...item.props, key }
+          return this.hasFocus(item) ? React.cloneElement(item, {...itemProps, hasFocus: true}) : React.cloneElement(item, {...itemProps})
+        })}
+      </div>
+    )
+  }
+}
+
+export default withFocusHandling(OnlyGoesUp)
+
+```
+

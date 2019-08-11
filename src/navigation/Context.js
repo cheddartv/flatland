@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const BoundaryContext = React.createContext({
+export const FlatlandContext = React.createContext({
   registerFocusThief: ((_flatId, _stealable) => {}),
 })
 export const FocusableContext = React.createContext({

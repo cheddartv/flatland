@@ -2,9 +2,9 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { def } from 'bdd-lazy-var/global'
 import { BOTTOM, DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
-import Boundary from '../Boundary'
+import Flatland from '../Flatland'
 
-def('rendered', () => ( mount(<Boundary></Boundary>)))
+def('rendered', () => ( mount(<Flatland></Flatland>)))
 
 it('incrementGlobals adjusts the globalX and globalY coordinates', () => {
   $rendered.setState({ coordinates: { globalX: 0, globalY: 0, selects: 10 } })

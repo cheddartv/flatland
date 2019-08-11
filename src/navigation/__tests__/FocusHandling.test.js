@@ -2,11 +2,11 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { def } from 'bdd-lazy-var/global'
 import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
-import Boundary from '../Boundary'
+import Flatland from '../Flatland'
 import Grid from '../Grid'
 
 def('pushFocusTo', () => ([{ flatId: 'thief' }]))
-def('rendered', () => ( mount(<Boundary><Grid flatId={'grid'} pushFocusTo={$pushFocusTo}/></Boundary>).find('Focusable(Grid)') ))
+def('rendered', () => ( mount(<Flatland><Grid flatId={'grid'} pushFocusTo={$pushFocusTo}/></Flatland>).find('Focusable(Grid)') ))
 def('mockFn', () => jest.fn())
 
 describe('the wrapped component', () => {
@@ -15,7 +15,7 @@ describe('the wrapped component', () => {
   })
 })
 
-describe('propagating up to Boundary', () => {
+describe('propagating up to Flatland', () => {
   it('should register the passed focus thieves on mount', () => {
     const spy = jest.spyOn($rendered.instance().context, 'registerFocusThief')
     $rendered.instance().componentDidMount()

@@ -1,8 +1,8 @@
 import React from 'react'
-import { BoundaryContext } from './Context'
+import { FlatlandContext } from './Context'
 import { DOWN, LEFT, RIGHT, SELECT, UP } from '../util/keypress'
 
-export default class Boundary extends React.Component {
+export default class Flatland extends React.Component {
   constructor(props) {
     super(props)
 
@@ -84,7 +84,7 @@ export default class Boundary extends React.Component {
     }
   }
 
-  get boundaryContext() {
+  get flatlandContext() {
     let { activeSection, coordinates } = this.state
     let { registerFocusThief, deregisterFocusThief, handleBoundary } = this
     return { ...coordinates, activeSection, registerFocusThief, deregisterFocusThief, handleBoundary }
@@ -96,15 +96,15 @@ export default class Boundary extends React.Component {
     children = React.Children.toArray(children)
 
     return (
-      <BoundaryContext.Provider value={this.boundaryContext}>
+      <FlatlandContext.Provider value={this.flatlandContext}>
         {children.map((section, index) => {
           if (typeof(section) !== 'object') {
-            throw(`Child ${section} of Boundary is invalid!`)
+            throw(`Child ${section} of Flatland is invalid!`)
           }
-          let key = section.key || `boundary-section-${index}`
+          let key = section.key || `flatland-section-${index}`
           return React.cloneElement(section, { key, ...section.props })
         })}
-      </BoundaryContext.Provider>
+      </FlatlandContext.Provider>
     )
   }
 }
