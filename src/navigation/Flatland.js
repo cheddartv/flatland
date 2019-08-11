@@ -12,7 +12,7 @@ export default class Flatland extends React.Component {
         globalY: 0,
         selects: 0,
       },
-      activeSection: props.initialActiveSection || props.children[0],
+      activeSection: props.initialActiveSection || this.tryFirstChild,
       focusThieves: {}
     }
 
@@ -23,6 +23,11 @@ export default class Flatland extends React.Component {
     this.deregisterFocusThief = this.deregisterFocusThief.bind(this)
     this.handleBoundary = this.handleBoundary.bind(this)
     this.handleSelect = this.handleSelect.bind(this)
+  }
+
+  get tryFirstChild() {
+    const children = React.Children.toArray(this.props.children)
+    return children[0] && children[0].props.flatId
   }
 
   componentDidMount() {

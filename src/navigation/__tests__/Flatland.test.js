@@ -1,5 +1,6 @@
 import React from 'react'
 import Flatland from '../Flatland'
+import Column from '../Column'
 import { mount } from 'enzyme'
 import { def } from 'bdd-lazy-var/global'
 import { BOTTOM, DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
@@ -37,23 +38,30 @@ describe('registering and deregistering focus thieves', () => {
 })
 
 describe('handleBoundary', () => {
-  beforeEach(() => $rendered.setState({ focusedSection: 'first' }))
+  beforeEach(() => $rendered.setState({ activeSection: 'first' }))
 
   it('should select the next registered section', () => {
     $rendered.setState({ focusThieves: { first: [{ flatId: 'second', onExitFrom: LEFT }] } })
     $rendered.instance().handleBoundary({ props: { flatId: 'first' } }, LEFT)
-    expect($rendered.state().focusedSection).toBe('second')
+    expect($rendered.state().activeSection).toBe('second')
   })
 
   it('should do nothing if a thief is not registered', () => {
     $rendered.instance().handleBoundary({ props: { flatId: 'first' } }, LEFT)
-    expect($rendered.state().focusedSection).toBe('first')
+    expect($rendered.state().activeSection).toBe('first')
   })
 
   it('should do nothing if unless is provided, and returns true', () => {
     $rendered.setState({ focusThieves: { first: [{ flatId: 'second', onExitFrom: LEFT, unless: (() => true) }] } })
     $rendered.instance().handleBoundary({ props: { flatId: 'first' } }, LEFT)
-    expect($rendered.state().focusedSection).toBe('first')
+    expect($rendered.state().activeSection).toBe('first')
+  })
+})
+
+describe('when initialActiveSection is not provided', () => {
+  def('rendered', () => ( mount(<Flatland><Column flatId={'pluckMe!'} /></Flatland>)))
+  it('should try to pluck the flatId from the first child section', () => {
+    expect($rendered.state().activeSection).toBe('pluckMe!')
   })
 })
 
