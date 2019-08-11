@@ -83,7 +83,7 @@ export default function withFocusHandling(WrappedComponent) {
     updateCurrentItem(item) { this.setState({ currentItem: item }) }
 
     get hasFocus() {
-      return this.props.flatId == this.context.focusedSection
+      return this.props.flatId == this.context.activeSection
     }
 
     composedHandleBoundary(rootBoundaryFn) {
