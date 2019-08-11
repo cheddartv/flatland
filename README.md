@@ -57,7 +57,7 @@ You may pass your items optional `onFocus` and `onSelect` callbacks via props:
 You may also pass an item a `classNames` prop, which accepts an object that [conditionally renders CSS classnames](https://github.com/JedWatson/classnames) for the DOM node that is ultimately rendered:
 
 ```
-<Item classNames={{ navItem: true }}>Movies</Item>
+<Item classNames={{ navItem: true }}>Comedy</Item>
 ```
 
 An item will have a classname of `.item` by default, and will also have classname `.hasFocus` when focused.
@@ -91,7 +91,7 @@ Note that Flatland is smart enough to pluck items out of any nesting of child co
 ```
 
 
-You must pass a section a `flatId` prop, which is a string that will be used to pass focus **from section to section** (more on this below).
+You must pass a section a `flatId` prop, which is a string that will be used to pass focus **from section to section** [(more on this below)](https://github.com/cheddartv/flatland#warping-around-flatland).
 
 Like items, sections can be passed a `classNames` prop.
 
@@ -99,9 +99,9 @@ The first child item of a section will have focus when the component first mount
 
 Flatland has three simple section types, `Column`, `Row`, and `Grid`. Columns and Rows promote and demote focus of child items in one dimension. Grids promote and demote focus in two dimensions.
 
-For example, the `navColumn` above will promote and demotes focus on the `UP` and `DOWN` events. Assuming the `navColumn` component just mounted, pressing `DOWN` will promote focus from `<Item>Comedy</Item>` to `<Item>Drama</Item>`. The same promotion would happen if this example were a `Row` instead, and `RIGHT` was pressed.
+For example, the `navColumn` above will promote and demote focus on the `UP` and `DOWN` events. Assuming the `navColumn` component just mounted, pressing `DOWN` will promote focus from `<Item>Comedy</Item>` to `<Item>Drama</Item>`. The same promotion would happen if this example were a `Row` instead, and `RIGHT` was pressed.
 
-`Grid` will create a matrix of children items, which will be distributed across the X and Y axis of your flatland app. You can control the length of the axes with the `itemsPerRow` prop.
+`Grid` will create a matrix of children items, which will be distributed across the X and Y axes of your flatland app. You can control the length of the axes with the `itemsPerRow` prop.
 
 To make sense of how sections pass focus from item to item, it may be helpful for you to define default global base stylings for `.item`, `.column`, `.row`, and `grid`:
 
@@ -139,32 +139,39 @@ import { Flatland, Column, Grid, RIGHT, LEFT, RIGHT } from 'flatland'
   ]}>
     ...
   </Grid>
-</Boundary>
+</Flatland>
 ```
 
-Assuming there is another child section of `Flatland` with `flatId` equal to `videoResults`, pressing RIGHT while the `navColumn` is active will pass focus to the `videoResults` Grid. If no section can become active, the active section remains active, and the focused item remains focused.
+Assuming there is another child section of `Flatland` with `flatId` equal to `videoResults`, pressing RIGHT while the `navColumn` is active will pass focus to the `videoResults` grid. If no section can become active, the active section remains active, and the focused item remains focused.
+
+You may prevent the default exit of a section by passing an `unless` function:
+
+```
+{ flatId: 'videoResults', onExitFrom: RIGHT, unless: () => this.hasNoResults },
+```
+
 
 ### Overriding Boundaries ###
 
-In rare cases, you may want to override the handling of a section exit. One notable example is when you want to paginate through a resource via exits from the `BOTTOM` or `TOP` of a grid.
+In rare cases, you may want to completely override the handling of a section exit. One notable example is when you want to paginate through a resource via exits from the `BOTTOM` or `TOP` of a grid.
 
-You may do this by providing a `handleBoundary` callback via props:
+You may do this by providing a `handleBoundary` callback to your grid via props:
 
 ```
 import { Grid, TOP, BOTTOM } from 'flatland'
 
 const VIDEO_ROW_COUNT = 2
 
-handleBoundary(propagateBoundary, ref, dir) {
-  if (dir == TOP && this.props.hasPreviousPage) {
+handleBoundary(propagateBoundary, sectionRef, direction) {
+  if (direction === TOP && this.props.hasPreviousPage) {
     this.props.previousPage()
-    ref.driveFocus((x,y) => [x, VIDEO_ROW_COUNT - 1])
-  } else if (dir == BOTTOM && this.props.hasNextPage)
+    sectionRef.driveFocus((x,y) => [x, VIDEO_ROW_COUNT - 1])
+  } else if (direction === BOTTOM && this.props.hasNextPage)
     this.props.nextPage().then(() => {
-      ref.driveFocus((x,y) => [x, 0])
+      sectionRef.driveFocus((x,y) => [x, 0])
     })
   } else {
-    return propagateBoundary(ref, dir)
+    propagateBoundary(ref, dir)
   }
 }
 
@@ -207,7 +214,7 @@ export default class Layout extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { category } = this.state
 
-    if (prevState.currentCategory != category) {
+    if (prevState.currentCategory !== category) {
       this.setState({ videos: fetchVideos(category) })
     }
   }
@@ -239,7 +246,6 @@ import LiveVideoItem from '../items/LiveVideoItem'
 import { Column, Item, RIGHT } from 'flatland'
 
 export default class NavColumn extends React.Component {
-
   itemProps(name) {
     return { onFocus: () => this.props.onFocus(name) }
   }
@@ -282,7 +288,7 @@ export default class LiveVideoItem extends React.Component {
 
   render() {
     return (
-      <Item hasFocus={this.props.hasFocus} classNames={{"liveVideoItem": true}} onSelect={this.onSelect}/>
+      <Item hasFocus={this.props.hasFocus} classNames={{ liveVideoItem: true }} onSelect={this.onSelect}/>
     )
   }
 }
@@ -316,7 +322,7 @@ Any component `withFocusHandling` will be passed a `handleBoundary(ref, dir)` pr
 
 ```
 import React from 'react'
-import { withFocusHandling, focusableChildrenOf. UP } from flatland'
+import { withFocusHandling, focusableChildrenOf, UP } from flatland'
 
 class OnlyGoesUp extends React.Component {
   constructor(props) {
@@ -326,7 +332,7 @@ class OnlyGoesUp extends React.Component {
   }
 
   handleUp() {
-    if (this.state.focusY == 0) {
+    if (this.state.focusY === 0) {
       this.props.handleBoundary(this, UP)
     } else {
       this.setState({ focusY: this.state.focusY - 1 })
@@ -356,3 +362,4 @@ export default withFocusHandling(OnlyGoesUp)
 
 ```
 
+You should also make use of the `focusableChildrenOf(sectionRef)` helper to ignore any non-focusable children passed to your custom section.

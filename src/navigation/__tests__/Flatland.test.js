@@ -1,8 +1,8 @@
 import React from 'react'
+import Flatland from '../Flatland'
 import { mount } from 'enzyme'
 import { def } from 'bdd-lazy-var/global'
 import { BOTTOM, DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
-import Flatland from '../Flatland'
 
 def('rendered', () => ( mount(<Flatland></Flatland>)))
 

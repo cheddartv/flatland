@@ -1,12 +1,12 @@
+import './shared.test.js'
 import React from 'react'
+import Item from '../Item'
+import Row from '../Row'
 import { mount } from 'enzyme'
 import { def, itBehavesLike } from 'bdd-lazy-var/global'
 import { DOWN } from '../../util/keypress'
-import Item from '../Item'
-import Row from '../Row'
-import './shared.test.js'
 
-def('rendered', () => ( mount(<Row classNames={{test: true}} />) ))
+def('rendered', () => ( mount(<Row classNames={{ test: true }} />) ))
 def('mockFn', () => jest.fn())
 
 it('renders without crashing', () => {

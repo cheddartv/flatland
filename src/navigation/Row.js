@@ -1,8 +1,8 @@
 import Classnames from 'classnames'
 import React from 'react'
+import withFocusHandling from './FocusHandling'
 import { focusableChildrenOf } from '../util/helpers'
 import { LEFT, RIGHT } from '../util/keypress'
-import withFocusHandling from './FocusHandling'
 
 class Row extends React.Component {
   constructor(props) {

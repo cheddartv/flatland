@@ -1,11 +1,11 @@
 import './shared.test.js'
 import React from 'react'
-import { mount } from 'enzyme'
-import { def } from 'bdd-lazy-var/global'
 import Item from '../Item'
 import Grid from '../Grid'
+import { mount } from 'enzyme'
+import { def } from 'bdd-lazy-var/global'
 
-def('rendered', () => ( mount(<Grid classNames={{test: true}} />) ))
+def('rendered', () => ( mount(<Grid classNames={{ test: true }} />) ))
 def('mockFn', () => jest.fn())
 
 it('renders without crashing', () => {

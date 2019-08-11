@@ -1,8 +1,8 @@
 import React from 'react'
+import Item from '../Item'
 import { def } from 'bdd-lazy-var/global'
 import { shallow, mount } from 'enzyme'
 import { FocusableContext } from '../context'
-import Item from '../Item'
 
 def('rendered', () => ( mount(<Item /> )))
 def('mockFn', () => jest.fn())
@@ -17,7 +17,7 @@ it('should be focusable', () => {
 
 describe('when props.onFocus becomes true', () => {
   it('calls props.onFocus', () => {
-    $rendered.setProps({onFocus: $mockFn, hasFocus: true})
+    $rendered.setProps({ onFocus: $mockFn, hasFocus: true })
     expect($mockFn).toHaveBeenCalled()
   })
 
@@ -30,13 +30,13 @@ describe('when props.onFocus becomes true', () => {
 
 
 it('calls props.onSelect when selected', () => {
-  $rendered.setProps({onSelect: $mockFn, hasFocus: true})
+  $rendered.setProps({ onSelect: $mockFn, hasFocus: true })
   $rendered.instance().handleSelect()
   expect($mockFn).toHaveBeenCalled()
 })
 
 describe('with children', () => {
-  def('rendered', () => ( mount(<Item classNames={{test: true}}>Hello World!</Item>) ))
+  def('rendered', () => ( mount(<Item classNames={{ test: true }}>Hello World!</Item>) ))
 
   it('passes down child text', () => {
     expect($rendered.text()).toEqual("Hello World!")

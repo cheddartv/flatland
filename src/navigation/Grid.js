@@ -1,9 +1,9 @@
 import Classnames from 'classnames'
 import React from 'react'
-import { focusableChildrenOf } from '../util/helpers'
 import item from './Item'
-import { DOWN, LEFT, RIGHT, UP } from '../util/keypress'
 import withFocusHandling from './FocusHandling'
+import { focusableChildrenOf } from '../util/helpers'
+import { DOWN, LEFT, RIGHT, UP } from '../util/keypress'
 
 class Grid extends React.Component {
   constructor(props) {

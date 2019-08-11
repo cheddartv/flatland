@@ -1,9 +1,9 @@
 import React from 'react'
-import { mount } from 'enzyme'
-import { def } from 'bdd-lazy-var/global'
-import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 import Flatland from '../Flatland'
 import Grid from '../Grid'
+import { DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
+import { mount } from 'enzyme'
+import { def } from 'bdd-lazy-var/global'
 
 def('pushFocusTo', () => ([{ flatId: 'thief' }]))
 def('rendered', () => ( mount(<Flatland><Grid flatId={'grid'} pushFocusTo={$pushFocusTo}/></Flatland>).find('Focusable(Grid)') ))

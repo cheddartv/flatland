@@ -26,7 +26,7 @@ export default class Flatland extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", this.composedHandleKeydown(this.handleKeydown))
+    window.addEventListener('keydown', this.composedHandleKeydown(this.handleKeydown))
   }
 
   composedHandleKeydown(rootHandleKeydown) {

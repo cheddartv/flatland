@@ -1,7 +1,7 @@
 import Classnames from 'classnames'
 import React from 'react'
-import { DOWN, UP } from '../util/keypress'
 import withFocusHandling from './FocusHandling'
+import { DOWN, UP } from '../util/keypress'
 import { focusableChildrenOf } from '../util/helpers'
 
 class Column extends React.Component {
