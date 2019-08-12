@@ -51,4 +51,5 @@ class Row extends React.Component {
   }
 }
 
+Row.displayName = 'Row'
 export default withFocusHandling(Row)

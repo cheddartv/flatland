@@ -119,4 +119,6 @@ class Grid extends React.Component {
 Grid.defaultProps = {
   classNames: { rowClass: false }
 }
+Grid.displayName = 'Grid'
+
 export default withFocusHandling(Grid)

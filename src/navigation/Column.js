@@ -51,4 +51,5 @@ class Column extends React.Component {
   }
 }
 
+Column.displayName = 'Column'
 export default withFocusHandling(Column)

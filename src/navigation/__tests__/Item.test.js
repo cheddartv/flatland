@@ -15,6 +15,10 @@ it('should be focusable', () => {
   expect(Item.focusable).toBeTruthy()
 })
 
+it('should have displayName of Item', () => {
+  expect(Item.displayName).toBe('Item')
+})
+
 describe('when props.onFocus becomes true', () => {
   it('calls props.onFocus', () => {
     $rendered.setProps({ onFocus: $mockFn, hasFocus: true })

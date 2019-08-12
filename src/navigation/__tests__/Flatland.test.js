@@ -7,6 +7,10 @@ import { BOTTOM, DOWN, LEFT, RIGHT, SELECT, UP } from '../../util/keypress'
 
 def('rendered', () => ( mount(<Flatland></Flatland>)))
 
+it('should have displayName of Flatland', () => {
+  expect(Flatland.displayName).toBe('Flatland')
+})
+
 it('incrementGlobals adjusts the globalX and globalY coordinates', () => {
   $rendered.setState({ coordinates: { globalX: 0, globalY: 0, selects: 10 } })
   $rendered.instance().incrementGlobals(1,0)

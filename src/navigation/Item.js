@@ -39,5 +39,6 @@ Item.defaultProps = {
 }
 
 Item.focusable = true
+Item.displayName = 'Item'
 
 Item.contextType = FocusableContext

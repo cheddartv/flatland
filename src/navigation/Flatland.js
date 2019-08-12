@@ -113,3 +113,5 @@ export default class Flatland extends React.Component {
     )
   }
 }
+
+Flatland.displayName = 'Flatland'
