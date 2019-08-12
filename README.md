@@ -1,5 +1,21 @@
 # Flatland #
 
+## Installation ##
+
+Flatland is currently private to the cheddartv npm org. You will need a token from a Cheddar dev to authenticate installation of this library.
+
+```
+yarn add @cheddartv/flatland
+```
+
+Once you have an authentication token, you may add it to your environment via ~/.bash_profile:
+
+```
+echo 'export NPM_TOKEN="{YOUR_TOKEN_HERE}"' >>~/.bash_profile
+source ~/.bash_profile
+yarn install
+```
+
 ## Usage ##
 
 In the beginning, there was `Flatland`.
@@ -39,7 +55,7 @@ handleKeydown(propagateKeydown, key) {
 ```
 
 
-You should configure your Flatland component with a `initialActiveSection` prop that matches the `flatId` of the section you would like to be initally focued. The flatland component will delegate to the active section to determine which `Item` is currently focused.
+You should configure your Flatland component with a `initialActiveSection` prop that matches the `flatId` of the section you would like to be initially focused. The flatland component will delegate to the active section to determine which `Item` is currently focused.
 
 ### Item ###
 `Items` are the atomic components of your Flatland app. An item is a component that can receive focus:
@@ -183,7 +199,7 @@ handleBoundary(propagateBoundary, sectionRef, direction) {
 </Grid>
 ```
 
-In the above example, `driveFocus` is a method exposed on `Grid` that permits the caller to override the currently focused item. Its argument is a function that returns an array with the new coordinates of focus. By keeping the value of the X focus constant, and only modifiying the Y focus value, the user has horizontal context from their previous page when navigating to a new page of resources.
+In the above example, `driveFocus` is a method exposed on `Grid` that permits the caller to override the currently focused item. Its argument is a function that returns an array with the new coordinates of focus. By keeping the value of the X focus constant, and only modifying the Y focus value, the user has horizontal context from their previous page when navigating to a new page of resources.
 
 ### Composition ###
 
