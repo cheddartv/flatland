@@ -1,11 +1,13 @@
 {
-  "name": "flatland",
+  "name": "@cheddartv/flatland",
   "version": "0.0.1",
-  "description": "",
+  "description": "A declarative focus handling React component library built for TV apps",
   "main": "dist/flatland.min.js",
+  "author": "Kevin Spector",
+  "license": "ISC",
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js --mode=development",
-    "build": "rm -rf dist/* && ./node_modules/.bin/webpack --config webpack.prod.js --mode=development",
+    "build": "rm -rf dist/* && ./node_modules/.bin/webpack --config webpack.prod.js --mode=production",
     "test": "node scripts/test.js"
   },
   "jest": {
@@ -36,7 +38,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "classnames": "^2.2.6",
     "enzyme": "^3",
-    "preact": "^10.0.0",
+    "preact": "10.0.0-rc.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-test-renderer": "^16.4.2",

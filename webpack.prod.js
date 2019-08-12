@@ -7,9 +7,9 @@ module.exports = {
     contentBase: './dist',
     host: '0.0.0.0',
     port: 4007,
-    // compress: true
+    compress: true
   },
-  //plugins: [ new MinifyPlugin({}, {}) ],
+  plugins: [ new MinifyPlugin({}, {}) ],
   output: {
     filename: 'flatland.min.js',
     path: path.resolve(__dirname, 'dist'),
