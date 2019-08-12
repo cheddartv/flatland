@@ -25,7 +25,9 @@ export default function withFocusHandling(WrappedComponent) {
     }
 
     componentWillUnmount() {
-      this.context.deregisterFocusThief(this.props.flatId)
+      if (this.context.deregisterFocusThief) {
+        this.context.deregisterFocusThief(this.props.flatId)
+      }
     }
 
     defaultHandleDirection(dir) {

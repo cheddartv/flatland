@@ -30,7 +30,7 @@ import { BACK, LEFT } from 'flatland'
 handleKeydown(propagateKeydown, key) {
   switch(key.keyCode) {
     case BACK:
-      propagateKeydown({ keycode: LEFT })
+      propagateKeydown({ keyCode: LEFT })
       break
     default:
       propagateKeydown(key)
