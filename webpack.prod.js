@@ -17,8 +17,8 @@ module.exports = {
     libraryTarget: 'umd'
   },
   externals: {
+    preact: 'preact',
     react: 'react',
-    classnames: 'classnames',
   },
   resolve: {
     alias: {
