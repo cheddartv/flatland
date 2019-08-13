@@ -1,5 +1,5 @@
 # Flatland #
-
+![flatland logo](https://assetdump.s3-us-west-2.amazonaws.com/flatland/logo.jpg)
 ## Installation ##
 
 Flatland is currently private to the cheddartv npm org. You will need a token from a Cheddar dev to authenticate installation of this library.
