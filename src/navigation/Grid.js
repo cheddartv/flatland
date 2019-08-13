@@ -11,7 +11,7 @@ class Grid extends React.Component {
 
     const indexOfFocus = focusableChildrenOf(this).findIndex(f => f.props.hasInitialFocus)
     const focusX = Math.max(0, indexOfFocus % this.itemsPerRow)
-    const focusY = Math.max(0, indexOfFocus % this.numRows)
+    const focusY = Math.max(0, Math.floor(indexOfFocus / this.numRows))
     const focusedItem = this.childrenAsMatrix.length > 0 && this.childrenAsMatrix[focusX][focusY]
     this.state = { focusX, focusY, focusedItem: focusedItem }
   }

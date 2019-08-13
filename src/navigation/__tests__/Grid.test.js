@@ -51,7 +51,7 @@ describe('with children', () => {
     def('hasInitialFocus', () => true)
     it('it yields focus to a focusable child with prop hasInitialFocus', () => {
       expect($rendered.state().focusX).toBe(1)
-      expect($rendered.state().focusX).toBe(1)
+      expect($rendered.state().focusY).toBe(1)
     })
   })
 

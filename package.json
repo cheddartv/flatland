@@ -1,6 +1,6 @@
 {
   "name": "@cheddartv/flatland",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A declarative focus handling React component library built for TV apps",
   "main": "dist/flatland.min.js",
   "author": "Kevin Spector",
