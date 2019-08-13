@@ -5,7 +5,6 @@ import Row from '../Row'
 import { mount } from 'enzyme'
 import { def, itBehavesLike } from 'bdd-lazy-var/global'
 import { DOWN } from '../../util/keypress'
-
 def('rendered', () => ( mount(<Row classNames={{ test: true }} />) ))
 def('mockFn', () => jest.fn())
 
@@ -18,10 +17,11 @@ it('should have the correct className', () => {
 })
 
 describe('with children', () => {
+  def('hasInitialFocus', () => false)
   def('rendered', () => mount(
     <Row handleBoundary={$mockFn} hasFocus={true}>
       <Item>Foo</Item>
-      <Item>Bar</Item>
+      <Item hasInitialFocus={$hasInitialFocus}>Bar</Item>
       <Item>Baz</Item>
     </Row>
   ).find('Row') )
@@ -32,4 +32,11 @@ describe('with children', () => {
   })
 
   itBehavesLike('it handles left and right correctly')
+
+  describe('when a child hasInitialFocus', () => {
+    def('hasInitialFocus', () => true)
+    it('it yields focus to a focusable child with prop hasInitialFocus', () => {
+      expect($rendered.state().focusX).toBe(1)
+    })
+  })
 })

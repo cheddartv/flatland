@@ -19,13 +19,14 @@ it('should have the correct className', () => {
 describe('with children', () => {
   def('baseProps', () => ({ handleBoundary: $mockFn, hasFocus: true }))
   def('gridProps', () => ({}))
+  def('hasInitialFocus', () => false)
   def('rendered', () => mount(
     <Grid {...$baseProps} {...$gridProps}>
       <Item>Foo</Item>
       <Item>Bar</Item>
       <Item>Baz</Item>
       <Item>Boo</Item>
-      <Item>Bop</Item>
+      <Item hasInitialFocus={$hasInitialFocus}>Bop</Item>
       <Item>Bat</Item>
       <Item>Cat</Item>
       <Item>Hat</Item>
@@ -46,6 +47,13 @@ describe('with children', () => {
   itBehavesLike('it handles left and right correctly')
   itBehavesLike('it handles up and down correctly')
 
+  describe('when a child hasInitialFocus', () => {
+    def('hasInitialFocus', () => true)
+    it('it yields focus to a focusable child with prop hasInitialFocus', () => {
+      expect($rendered.state().focusX).toBe(1)
+      expect($rendered.state().focusX).toBe(1)
+    })
+  })
 
   describe('with specified num per row', () => {
     def('gridProps', () => ({ itemsPerRow: 2 }))

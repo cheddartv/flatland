@@ -16,3 +16,7 @@ export function focusableChildrenOf(node) {
 
   return childrenToArray.reduce((m, child) => [...m, ...focusableChildrenOf(child)], [])
 }
+
+export function indexOfInitialFocus(section) {
+  return Math.max(focusableChildrenOf(section).findIndex(f => f.props.hasInitialFocus), 0)
+}

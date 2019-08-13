@@ -17,10 +17,11 @@ it('should have the correct className', () => {
 })
 
 describe('with children', () => {
+  def('hasInitialFocus', () => false)
   def('rendered', () => mount(
     <Column handleBoundary={$mockFn} hasFocus={true}>
       <Item>Foo</Item>
-      <Item>Bar</Item>
+      <Item hasInitialFocus={$hasInitialFocus}>Bar</Item>
       <Item>Baz</Item>
     </Column>
   ).find('Column') )
@@ -31,4 +32,11 @@ describe('with children', () => {
   })
 
   itBehavesLike('it handles up and down correctly')
+
+  describe('when a child hasInitialFocus', () => {
+    def('hasInitialFocus', () => true)
+    it('it yields focus to a focusable child with prop hasInitialFocus', () => {
+      expect($rendered.state().focusY).toBe(1)
+    })
+  })
 })

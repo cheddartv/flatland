@@ -90,7 +90,7 @@ An item will have a classname of `.item` by default, and will also have classnam
 </Column>
 ```
 
-Note that Flatland is smart enough to pluck items out of any nesting of child components:
+Note that Flatland sections are smart enough to pluck items out of any nesting of child components:
 
 ```
 <Column flatId={'navColumn'}>
@@ -111,7 +111,7 @@ You must pass a section a `flatId` prop, which is a string that will be used to 
 
 Like items, sections can be passed a `classNames` prop.
 
-The first child item of a section will have focus when the component first mounts, and is made active.
+The first child item of a section will have focus when the component first mounts, and is made active. You can override this behavior by passing a `hasInitialFocus={true}` prop to one of your section's child items.
 
 Flatland has three simple section types, `Column`, `Row`, and `Grid`. Columns and Rows promote and demote focus of child items in one dimension. Grids promote and demote focus in two dimensions.
 

@@ -9,11 +9,11 @@ class Grid extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      focusX: 0,
-      focusY: 0,
-      focusedItem: focusableChildrenOf(this)[0],
-    }
+    const indexOfFocus = focusableChildrenOf(this).findIndex(f => f.props.hasInitialFocus)
+    const focusX = Math.max(0, indexOfFocus % this.itemsPerRow)
+    const focusY = Math.max(0, indexOfFocus % this.numRows)
+    const focusedItem = this.childrenAsMatrix.length > 0 && this.childrenAsMatrix[focusX][focusY]
+    this.state = { focusX, focusY, focusedItem: focusedItem }
   }
 
   get maxFocusX() { return this.maxFocusOfXAt(this.state.focusY) }
@@ -22,13 +22,18 @@ class Grid extends React.Component {
     return this.childrenAsMatrix[y].length - 1
   }
 
-  get childrenAsMatrix() {
-    const itemsPerRow = this.props.itemsPerRow || Math.ceil(Math.sqrt(focusableChildrenOf(this).length))
-    const numRows = Math.ceil(focusableChildrenOf(this).length / itemsPerRow)
+  get itemsPerRow() {
+    return this.props.itemsPerRow || Math.ceil(Math.sqrt(focusableChildrenOf(this).length))
+  }
 
+  get numRows() {
+    return Math.ceil(focusableChildrenOf(this).length / this.itemsPerRow)
+  }
+
+  get childrenAsMatrix() {
     let matrix = []
-    for ( let i = 0; i < numRows; i++ ) {
-      matrix.push(focusableChildrenOf(this).slice(i * itemsPerRow, (i + 1) * itemsPerRow))
+    for ( let i = 0; i < this.numRows; i++ ) {
+      matrix.push(focusableChildrenOf(this).slice(i * this.itemsPerRow, (i + 1) * this.itemsPerRow))
     }
     return matrix
   }

@@ -1,14 +1,14 @@
-import Classnames from 'classnames'
 import React from 'react'
+import Classnames from 'classnames'
 import withFocusHandling from './FocusHandling'
 import { DOWN, UP } from '../util/keypress'
-import { focusableChildrenOf } from '../util/helpers'
+import { focusableChildrenOf, indexOfInitialFocus } from '../util/helpers'
 
 class Column extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { focusY: 0 }
+    this.state = { focusY: indexOfInitialFocus(this) }
   }
 
   get maxFocusY() { return focusableChildrenOf(this).length - 1 }

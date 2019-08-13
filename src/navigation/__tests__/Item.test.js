@@ -32,7 +32,6 @@ describe('when props.onFocus becomes true', () => {
   })
 })
 
-
 it('calls props.onSelect when selected', () => {
   $rendered.setProps({ onSelect: $mockFn, hasFocus: true })
   $rendered.instance().handleSelect()
