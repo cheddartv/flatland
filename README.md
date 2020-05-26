@@ -1,19 +1,8 @@
 # Flatland #
 ![flatland logo](https://assetdump.s3-us-west-2.amazonaws.com/flatland/logo.jpg)
 ## Installation ##
-
-Flatland is currently private to the cheddartv npm org. You will need a token from a Cheddar dev to authenticate installation of this library.
-
 ```
 yarn add @cheddartv/flatland
-```
-
-Once you have an authentication token, you may add it to your environment via ~/.bash_profile:
-
-```
-echo 'export NPM_TOKEN="{YOUR_TOKEN_HERE}"' >>~/.bash_profile
-source ~/.bash_profile
-yarn install
 ```
 
 ## Usage ##
